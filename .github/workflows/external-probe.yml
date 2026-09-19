@@ -12,7 +12,10 @@ name: external probe
 # publish step into something that stops writing when nothing changed.
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    # Offset, not '*/15'. GitHub's scheduled events are best-effort and the top of
+    # each quarter-hour is the most contended slot on the shared scheduler, so a
+    # round */15 is the one most likely to be delayed or skipped under load.
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
