@@ -1,0 +1,68 @@
+name: external probe
+
+# Every ~15 minutes, from a GitHub runner OUTSIDE the house.
+#
+# This repo is PUBLIC on purpose: Actions minutes are free for public repos, and a
+# */15 schedule in a private repo would burn ~2,900 min/month against a 2,000-minute
+# allowance shared with other scheduled jobs. Nothing here is private -- the URLs are
+# published product sites and the results are their up/down state.
+#
+# ⛔ GitHub disables a scheduled workflow after 60 days with no repo activity. The
+# force-push of the `status` branch below IS that activity, so do not "optimise" the
+# publish step into something that stops writing when nothing changed.
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: external-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe public URLs
+        id: probe
+        continue-on-error: true
+        env:
+          PROBE_VANTAGE: github-actions
+          PROBE_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: bash probe.sh urls.json status.json
+
+      # Publish BEFORE failing the job. The relay on docker01 reads this file, and a
+      # run that goes red without publishing would leave the wall reading the previous
+      # verdict while GitHub quietly knows better.
+      - name: Publish status.json to the status branch
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s status.json
+          work=$(mktemp -d)
+          cp status.json "$work/status.json"
+          cd "$work"
+          git init -q -b status
+          git config user.email 'actions@users.noreply.github.com'
+          git config user.name 'palavir-status'
+          git add status.json
+          git commit -qm "status $(jq -r .verdict status.json) $(jq -r .generated_at status.json)"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            status
+
+      # Red here is the out-of-band alarm: GitHub emails the repo owner on a failed
+      # scheduled run, over a path that does not touch the house internet. That is the
+      # one notification channel that survives the outage this whole repo exists to
+      # detect -- ntfy, Kuma and the wall all live on docker01.
+      - name: Fail the run if a public site is down
+        if: steps.probe.outcome == 'failure'
+        run: |
+          jq -r '"DOWN: \(.down_names | join(", "))"' status.json
+          exit 1

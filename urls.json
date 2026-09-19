@@ -1,0 +1,14 @@
+{
+  "_comment": "Public Palavir product URLs, probed from OUTSIDE the house. Mirrors Kuma monitors 1-9, which probe the same URLs from INSIDE (docker01). The pair is the whole point: when the inside monitors go red and these stay green, the house internet died, not the sites.",
+  "targets": [
+    { "name": "Palavir.co",     "url": "https://palavir.co",              "expect": [200] },
+    { "name": "FindGrants",     "url": "https://findgrants.io",           "expect": [200] },
+    { "name": "GovBids",        "url": "https://govcontractdata.com",     "expect": [200] },
+    { "name": "NewFilings",     "url": "https://newfilingalerts.com",     "expect": [200] },
+    { "name": "OnePageAudit",   "url": "https://onepageaudit.com",        "expect": [200] },
+    { "name": "Brighten",       "url": "https://hellobrighten.com",       "expect": [200] },
+    { "name": "SkipEntry",      "url": "https://skipentry.com",           "expect": [200] },
+    { "name": "Recon",          "url": "https://arearecon.com",           "expect": [200] },
+    { "name": "n8n (public)",   "url": "https://n8n.palavir.co/healthz",  "expect": [200] }
+  ]
+}
