@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-09-26T19:25:12Z",
+  "vantage": "github-actions",
+  "verdict": "ok",
+  "total": 9,
+  "up": 9,
+  "down": 0,
+  "run_url": "https://github.com/joshmeee/palavir-status/actions/runs/36265977451",
+  "down_names": [],
+  "results": [
+    {
+      "name": "Palavir.co",
+      "url": "https://palavir.co",
+      "code": 200,
+      "ms": 121,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "FindGrants",
+      "url": "https://findgrants.io",
+      "code": 200,
+      "ms": 148,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "GovBids",
+      "url": "https://govcontractdata.com",
+      "code": 200,
+      "ms": 215,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "NewFilings",
+      "url": "https://newfilingalerts.com",
+      "code": 200,
+      "ms": 196,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "OnePageAudit",
+      "url": "https://onepageaudit.com",
+      "code": 200,
+      "ms": 251,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "Brighten",
+      "url": "https://hellobrighten.com",
+      "code": 200,
+      "ms": 452,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "SkipEntry",
+      "url": "https://skipentry.com",
+      "code": 200,
+      "ms": 246,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "Recon",
+      "url": "https://arearecon.com",
+      "code": 200,
+      "ms": 307,
+      "tries": 1,
+      "ok": true
+    },
+    {
+      "name": "n8n (public)",
+      "url": "https://n8n.palavir.co/healthz",
+      "code": 200,
+      "ms": 100,
+      "tries": 1,
+      "ok": true
+    }
+  ]
+}
