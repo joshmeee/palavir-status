@@ -33,9 +33,11 @@ command -v jq >/dev/null || { echo "probe: jq is required" >&2; exit 2; }
 probe_one() {
   local url="$1" code ms try out
   for try in $(seq 1 "$ATTEMPTS"); do
+    # PalavirMonitor in the UA is load-bearing: palavir.co's Vercel firewall (2026-09-30)
+    # bot-challenges unknown clients with a 429 and bypasses only named monitor UAs.
     out=$(curl -sS -o /dev/null -L --max-time "$TIMEOUT" \
             -w '%{http_code} %{time_total}' \
-            -A 'palavir-status-probe (+https://github.com/joshmeee/palavir-status)' \
+            -A 'PalavirMonitor/1.0 palavir-status-probe (+https://github.com/joshmeee/palavir-status)' \
             "$url" 2>/dev/null) || out="000 0"
     code=${out%% *}; ms=${out##* }
     if [ "$code" != "000" ]; then echo "$code $ms $try"; return; fi
